@@ -1,0 +1,86 @@
+{
+  "name": "nightvault-messenger",
+  "version": "0.9.6",
+  "description": "NightVault v0.9.6 stability and updater polish",
+  "main": "src/main.js",
+  "scripts": {
+    "server": "node server/server.js",
+    "client": "electron .",
+    "doctor": "node scripts/doctor.js",
+    "build:win": "electron-builder --win nsis",
+    "pack:win": "electron-builder --win portable",
+    "build:installer": "electron-builder --win nsis",
+    "build:portable": "electron-builder --win portable",
+    "dist": "electron-builder --win nsis portable",
+    "check": "node --check src/main.js && node --check src/preload.js && node --check src/renderer.js && node --check server/server.js && node --check scripts/doctor.js",
+    "release:patch": "npm version patch && git push && git push --tags"
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "electron-store": "^8.2.0",
+    "express": "^4.19.2",
+    "multer": "^1.4.5-lts.1",
+    "ws": "^8.18.0",
+    "electron-updater": "^6.3.9"
+  },
+  "devDependencies": {
+    "electron": "^31.7.7",
+    "electron-builder": "^24.13.3"
+  },
+  "build": {
+    "appId": "com.nightvault.messenger",
+    "productName": "NightVault",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "src/**/*",
+      "assets/**/*",
+      "package.json"
+    ],
+    "extraResources": [
+      {
+        "from": "server",
+        "to": "server"
+      }
+    ],
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        },
+        {
+          "target": "portable",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "icon": "assets/icon.ico"
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "NightVault",
+      "artifactName": "NightVault-Setup-${version}.${ext}",
+      "uninstallDisplayName": "NightVault",
+      "deleteAppDataOnUninstall": false,
+      "runAfterFinish": true
+    },
+    "asar": true,
+    "publish": [
+      {
+        "provider": "github",
+        "owner": "Onmaynec",
+        "repo": "nightvaultPublic",
+        "releaseType": "release"
+      }
+    ]
+  }
+}
